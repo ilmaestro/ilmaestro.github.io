@@ -15,7 +15,6 @@ Ryan Kilkenny
 2. Setting up F\# with Unity - Visual Studio
 3. An Asyncronous Gameflow
 4. Lessons Learned
-5. 
 
 ---
 
