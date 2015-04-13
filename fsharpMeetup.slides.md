@@ -12,15 +12,11 @@ Ryan Kilkenny
 # Agenda
 
 1. Introduction
-2. Setting up F\# with Unity - Visual Studio
+2. Setting up F\# with Unity
 3. Do some stuff with Unity!
-4. Concept of Asyncronous Gameflow
+4. Asyncronous Gameflow
 5. Lessons Learned
-
-
-
-
-
+6. Game Demo
 
 ---
 
@@ -29,9 +25,6 @@ Introduction
  * [Unity Logo]
  * [Visual Studio Log]
  * [F\# Logo]
-
-
-
 
 
 ---
