@@ -136,7 +136,6 @@ An Asyncronous Gameflow
  * F\# asynchronous workflows are simple and responsive
 
 ---
-
 ## Example
 Let's say in our game we want to:
  1. Fire a "shot" when the Fire1 button is triggered
@@ -151,6 +150,9 @@ let fireEvt  = Event<_>()
 ```F#
 member this.FireAsync() = Async.AwaitEvent fireEvt.Publish
 ```
+
+---
+## Example
 
 ### Trigger the event and pass arguments
 ```F#
