@@ -1,6 +1,6 @@
 class: center, middle
 
-# Let's build a Unity3D game with F#
+# Let's build a Unity3D game with F\#
 
 ---
 
