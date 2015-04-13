@@ -135,6 +135,8 @@ An Asyncronous Gameflow
  * Synchronous workflows are simpler than most asynchronous tasks involving callbacks, but are not as responsive
  * F\# asynchronous workflows are simple and responsive
 
+---
+
 ## Example
 Let's say in our game we want to:
  1. Fire a "shot" when the Fire1 button is triggered
@@ -155,6 +157,8 @@ member this.FireAsync() = Async.AwaitEvent fireEvt.Publish
 if Input.GetButton("Fire1") then fireEvt.Trigger(Time.time)
 ```
 Aside: async workflows do not execute on the main thread.  Statically scoped values, such as Time.time, are only available on the main thread and must therefore be passed as arguments.
+
+---
 
 ### Setup the async workflow to handle the event and calculate the next Fire time
 ```F#
