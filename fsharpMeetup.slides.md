@@ -1,47 +1,148 @@
-class: center, middle
-
-Let's build a Unity3D game with F\#
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+Let's build a Unity game with F\#
 -----------------------------------
-Ryan Kilkenny
-
-4/22/2015
-
-
+[F\# Meetup 4/22/2015 - Ryan Kilkenny]
+.footnote[http://ilmaestro.github.io/fsharpMeetup.html]
 ---
-
+layout: false
+.left-column[
 # Agenda
+]
+.right-column[
+- Introduction
 
-1. Introduction
-2. Setting up F\# with Unity
-3. Do some stuff with Unity!
-4. Asyncronous Gameflow
-5. Lessons Learned
-6. Game Demo
+- Setting up F\# with Unity
+
+- Do some stuff with Unity!
+
+- Asyncronous Gameflow
+
+- Lessons Learned
+
+- Game Demo
+]
+---
+template: inverse
+
+![Default-aligned image](images/Unity_3D_logo.png)
+---
+.left-column[
+    ## What is it?
+]
+.right-column[
+- Unity is a multi-platform IDE for scripting games and working with 3D virtual worlds.
+
+]
+---
+
+.left-column[
+## What is it?
+## How to get it?
+]
+.right-column[
+- Unity is a multi-platform IDE for scripting games and working with 3D virtual worlds.
+
+- Download the free personal edition from [http://unity3d.com]. Currently using version 5.0.1
+
+]
+---
+.left-column[
+## What is it?
+## How to get it?
+## Multi-Platform!
+]
+.right-column[
+- Unity is a multi-platform IDE for scripting games and working with 3D virtual worlds.
+
+- Download the free personal edition from [http://unity3d.com]. Currently using version 5.0.1
+
+- Exports to many platforms, including:
+    - Web / WebGL
+    - Mac / PC
+    - iOS
+    - Android
+    - Xbox
+    - Ps3/Ps4
+    - Windows Store
+    - Windows Phone 8
+    - ... and more!
+]
 
 ---
 
-Introduction
-------------
- * [Unity Logo]
- * [Visual Studio Log]
- * [F\# Logo]
+template: inverse
 
-
+## Unity Scripting in Action... Csharp style.
 ---
+template: inverse
+
 Setting up F\# with Unity
 -------------------------
- 1. Download Unity
- 2. Download Unity for Visual Studio
- 3. Set up a project in Unity
- 4. Set up the VS solution
- 5. Add F\# project
- 6. Add FSharp.core.dll to Unity
- 7. Add Unity references to F\# project
- 8. Test!
-
 
 ---
-Simple F\# Interop Notes
+.left-column[
+## Unity Setup
+]
+.right-column[
+- Download Unity Tools for Visual Studio [http://unityvs.com]
+
+- Start a new project in Unity
+
+- Import Package -> Visual Studio 2013 Tools
+
+- Add project files: Visual Studio Tools -> Generate Project Files
+
+- Open solution: Visual Studio Tools -> Open in Visual Studio
+]
+
+---
+.left-column[
+## Unity Setup
+## VS2013 Setup
+]
+.right-column[
+1. Add F\# project to the solution: New Project -> Visual F# -> Library
+
+2. Make sure FSharp.core.dll has "copy local" set to true
+
+3. Under Project Settings -> Application:
+    - Target Framework: Unity 3.5 full Base Class Libraries
+    - Target F\# Runtime: F\# 3.0
+
+4. Project Settings -> Build:
+    - Output path: Path to "Assets\bin" Folder
+
+5. Add Unity references to F\# project, make sure each has "copy local" set to false
+    - Unity Engine: C:\Program Files\Unity\Editor\Data\Managed\UnityEngine.dll
+    - Unity Editor: C:\Program Files\Unity\Editor\Data\Managed\UnityEditor.dll
+    - Unity Editor UI: C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll
+]
+
+---
+Hello Unity from F\#
+--------------------
+```F#
+open UnityEngine
+
+type RandomRotator() = 
+    inherit MonoBehaviour() // MonoBehaviour is the Unity base class
+
+    // This field will get serialized into the Unity Editor
+    [<SerializeField>][<DefaultValue>] val mutable tumble : float32
+
+    // Start is only called once when the Scene loads
+    member this.Start() = 
+        // Create a random velocity vector
+        let rv = Random.insideUnitSphere * this.tumble
+        // Set the rigidbody's angular velocity
+        this.GetComponent<Rigidbody>().angularVelocity <- rv
+```
+
+---
+Some F\# Interop Notes
 ------------------------
 
 ### Basic Class Definition
@@ -72,7 +173,7 @@ public class CustomerName
 ```
 
 ---
-Simple F\# Interop Notes
+Some F\# Interop Notes
 ------------------------
 
 ### Methods: Tupled form vs. Curried form
@@ -90,7 +191,7 @@ member this.OnTriggerExit (other : Collider) name =
 ```
 
 ---
-Simple F\# Interop Notes
+Some F\# Interop Notes
 ------------------------
 
 ### Void functions
@@ -99,7 +200,7 @@ member this.Start() =
 ```
 
 ---
-Simple F\# Interop Notes
+Some F\# Interop Notes
 ------------------------
 
 ### Defining mutable, serializable fields without a default value
@@ -113,13 +214,6 @@ For more examples check out: [http://fsharpforfunandprofit.com/posts/classes]
 Do some stuff with Unity!
 -------------------------
 Demo
-
-
-
-
-
-
-
 
 ---
 An Asyncronous Gameflow
