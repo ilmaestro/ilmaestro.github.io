@@ -391,3 +391,6 @@ An F\# Unity Game
 - Rewritten in F\#
 - Feel free to fork on Github: https://github.com/ilmaestro/SpaceShooter-FSharp
 
+---
+template: inverse
+## Thank you!
