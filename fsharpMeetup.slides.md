@@ -12,15 +12,15 @@ layout: false
 # Agenda
 ]
 .right-column[
-- Introduction
+- Unity Introduction
 
 - Setting up F\# with Unity
 
 - Do some stuff with Unity!
 
-- Asyncronous Gameflow
+- Asynchronous Gameflow?
 
-- Lessons Learned
+- Lessons Learned.. so far
 
 - Game Demo
 ]
@@ -75,7 +75,13 @@ template: inverse
 
 template: inverse
 
-## Unity Scripting in Action... Csharp style.
+## Unity Scripting in Action...
+---
+## Demo
+- Unity interface: Scene View, Game View, Hierarchy Panel, Project Panel, Inspectors
+- Game objects: Camera, Light, 3d objects
+- Game components: Transform (position, rotation, scale), Rigidbody (Unity's physics engine)
+- Scripting a rotator
 ---
 template: inverse
 
@@ -91,9 +97,9 @@ Setting up F\# with Unity
 
 - Start a new project in Unity
 
-- Import Package -> Visual Studio 2013 Tools
+- Assets -> Import Package -> Visual Studio 2013 Tools
 
-- Add project files: Visual Studio Tools -> Generate Project Files
+- Visual Studio Tools -> Generate Project Files (adds the UnityVS folder)
 
 - Open solution: Visual Studio Tools -> Open in Visual Studio
 ]
@@ -105,25 +111,38 @@ Setting up F\# with Unity
 ]
 .right-column[
 1. Add F\# project to the solution: New Project -> Visual F# -> Library
+    * Locate it inside the Unity project folder, not in the Assets folder
 
 2. Make sure FSharp.core.dll has "copy local" set to true
 
-3. Under Project Settings -> Application:
+3. Project Properties -> Application:
     - Target Framework: Unity 3.5 full Base Class Libraries
     - Target F\# Runtime: F\# 3.0
 
-4. Project Settings -> Build:
+4. Project Properties -> Build:
     - Output path: Path to "Assets\bin" Folder
 
 5. Add Unity references to F\# project, make sure each has "copy local" set to false
-    - Unity Engine: C:\Program Files\Unity\Editor\Data\Managed\UnityEngine.dll
-    - Unity Editor: C:\Program Files\Unity\Editor\Data\Managed\UnityEditor.dll
-    - Unity Editor UI: C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll
+- C:\Program Files\Unity\Editor\Data\Managed: UnityEngine.dll, UnityEditor.dll
+- C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\GUISystem: UnityEngine.UI.dll
 ]
 
 ---
 Hello Unity from F\#
 --------------------
+Create a class that inherits from MonoBehaviour
+
+```F#
+open UnityEngine
+
+type RandomRotator() = 
+    inherit MonoBehaviour() // MonoBehaviour is the Unity base class
+```
+---
+
+Hello Unity from F\#
+--------------------
+Create a public field that we can see from the Unity Editor
 ```F#
 open UnityEngine
 
@@ -132,16 +151,28 @@ type RandomRotator() =
 
     // This field will get serialized into the Unity Editor
     [<SerializeField>][<DefaultValue>] val mutable tumble : float32
-
-    // Start is only called once when the Scene loads
-    member this.Start() = 
-        // Create a random velocity vector
-        let rv = Random.insideUnitSphere * this.tumble
-        // Set the rigidbody's angular velocity
-        this.GetComponent<Rigidbody>().angularVelocity <- rv
 ```
 
 ---
+Hello Unity from F\#
+--------------------
+Add our code to the Start method, which sets the angular velocity to a random velocity vector
+```F#
+open UnityEngine
+
+type RandomRotator() = 
+    inherit MonoBehaviour() // MonoBehaviour is the Unity base class
+    
+    // This field will get serialized into the Unity Editor
+    [<SerializeField>][<DefaultValue>] val mutable tumble : float32
+
+    // Start is only called once when the Scene loads
+    member this.Start() = 
+        let rb = this.GetComponent<Rigidbody>()
+        rb.angularVelocity <- Random.insideUnitSphere * this.tumble
+```
+---
+
 Some F\# Interop Notes
 ------------------------
 
@@ -218,16 +249,58 @@ Demo
 ---
 An Asyncronous Gameflow
 -----------------------
- * Games are both asynchronous and statefull
+ * Games are both asynchronous and statefull (lots of user input, collisions, and sequences that must be managed)
  * Synchronous workflows are simpler than most asynchronous tasks involving callbacks, but are not as responsive
  * F\# asynchronous workflows are simple and responsive
 
 ---
+.left-column[
 ## Example
+]
+.right-column[
 Let's say in our game we want to:
  1. Fire a "shot" when the Fire1 button is triggered
  2. Limit the rate of fire to specific times
+]
 
+---
+
+.left-column[
+## Example
+]
+.right-column[
+In C\#, this is done by keeping track of the "next fire time" in a class variable.
+```C#
+public class FireHandler : MonoBehaviour {
+
+    public float fireRate = 1.0f;
+
+    float nextFireTime;
+    
+    void Start () 
+    {
+        nextFireTime = Time.time;
+    }
+
+    void Update()
+    {
+        if (Input.GetButton("Fire1") && Time.time >= nextFireTime)
+        {
+            //fire something..
+            nextFireTime = Time.time + fireRate;
+        }
+    }
+}
+```
+]
+
+---
+
+.left-column[
+## Example
+]
+.right-column[
+In F\#, we can set up an asynchronous workflow that waits for each Fire event, but passes the Time as an immutable value
 ### Create a Custom Event
 ```F#
 let fireEvt  = Event<_>()
@@ -237,33 +310,39 @@ let fireEvt  = Event<_>()
 ```F#
 member this.FireAsync() = Async.AwaitEvent fireEvt.Publish
 ```
-
+]
 ---
+.left-column[
 ## Example
-
+]
+.right-column[
 ### Trigger the event and pass arguments
 ```F#
 if Input.GetButton("Fire1") then fireEvt.Trigger(Time.time)
 ```
 Aside: async workflows do not execute on the main thread.  Statically scoped values, such as Time.time, are only available on the main thread and must therefore be passed as arguments.
+]
 
 ---
+.left-column[
+## Example
+]
+.right-column[
+### Setup the async workflow
+- recursive asynchronous loop
+- handles each event and calculates the next Fire time
+- does it without mutating any values!
 
-### Setup the async workflow to handle the event and calculate the next Fire time
 ```F#
 //Define the Firing workflow
 let fireWF = async {
-    
-    // partially apply our firing controller
-    let fireCtrlr = GameLogic.playerFire this.shot this.shotSpawn this.fireRate
-
     // set up an infinite loop with game state
     let rec fireloop(nextFire) = async {
         // WAIT for the fire button to be triggered
         let! time = this.FireAsync()
 
         // handle the fire and get our nextfiretime
-        let nextfiretime = fireCtrlr time nextFire
+        let nextfiretime = fireCtrlr fireRate time nextFire
         return! fireloop(nextfiretime)
     }
     return! fireloop(0.0f)
@@ -273,13 +352,13 @@ fireWF  |> Async.StartImmediate |> ignore
 
 ```F#
 // define the fire controller
-let playerFire (shot : GameObject) (shotSpawn: Transform) fireRate (time : float32) nextFire = 
+let fireCtrlr fireRate (time : float32) nextFire = 
     if time >= nextFire then 
-        GameObject.Instantiate(shot, shotSpawn.position, Quaternion.identity) |> ignore
+        // fire something!
         time + fireRate
     else nextFire
 ```
-
+]
 
 ---
 
@@ -290,11 +369,6 @@ Some Lessons Learned
  * Dependencies must be loaded in order
  * Use ALT+UP/DOWN to control the order of the files
 
-
-
-
-
-
 ---
 
 Code Organization
@@ -302,10 +376,18 @@ Code Organization
 
 ## Typical FSharp Organization
  * files organized into layers: data first, then functions
- * cyclic dependencies?
  * first file in the ordering has ZERO dependencies
  * 1 module per file
 
 ## proposed f# unity organization
  * top-level file contains the game components and should have no dependencies
  * use modules to expand game functionality
+
+---
+
+An F\# Unity Game
+-----------------
+- Taken from the Unity3d Space Shooter Tutorial, http://unity3d.com/learn/tutorials/projects/space-shooter
+- Rewritten in F\#
+- Feel free to fork on Github: https://github.com/ilmaestro/SpaceShooter-FSharp
+
