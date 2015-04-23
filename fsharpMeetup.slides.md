@@ -227,8 +227,8 @@ Some F\# Interop Notes
 For more examples check out: [http://fsharpforfunandprofit.com/posts/classes]
 
 ---
-Do some stuff with Unity!
--------------------------
+Do some F\# stuff with Unity!
+-----------------------------
 Demo
 
 ---
