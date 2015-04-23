@@ -365,7 +365,7 @@ Code Organization
  * 1 module per file
 
 ## proposed f# unity organization
- * top-level file contains the game components and should have no dependencies
+ * top-layer file contains the game components, other layers support the game components
  * use modules to expand game functionality
 
 ---
