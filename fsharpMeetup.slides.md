@@ -285,7 +285,7 @@ public class FireHandler : MonoBehaviour {
 ## Example
 ]
 .right-column[
-In F\#, we can set up an asynchronous workflow that waits for each Fire event, but passes the Time as an immutable value
+In F\#, we can set up an asynchronous event that waits for each Fire event to get triggered, which gets used in the Async workflow.
 ### Create a Custom Event
 ```F#
 let fireEvt  = Event<_>()
