@@ -75,13 +75,7 @@ template: inverse
 
 template: inverse
 
-## Unity Scripting in Action...
----
-## Demo
-- Unity interface: Scene View, Game View, Hierarchy Panel, Project Panel, Inspectors
-- Game objects: Camera, Light, 3d objects
-- Game components: Transform (position, rotation, scale), Rigidbody (Unity's physics engine)
-- Scripting a rotator
+## Unity in Action...
 ---
 template: inverse
 
@@ -219,15 +213,6 @@ Any methods defined in curried form are only evaluated once at runtime, and most
 
 ```F#
 member this.OnTriggerExit (other : Collider) name =
-```
-
----
-Some F\# Interop Notes
-------------------------
-
-### Void functions
-```F#
-member this.Start() =
 ```
 
 ---
