@@ -4,7 +4,7 @@ class: center, middle, inverse
 ---
 Let's build a Unity game with F\#
 -----------------------------------
-[F\# Meetup 4/22/2015 - Ryan Kilkenny]
+[F\# Meetup 6/24/2015 - Ryan Kilkenny]
 .footnote[http://ilmaestro.github.io/fsharpMeetup.html]
 ---
 layout: false
