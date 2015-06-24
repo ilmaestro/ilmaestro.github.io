@@ -291,9 +291,9 @@ In F\#, we can set up an asynchronous event that waits for each Fire event to ge
 let fireEvt  = Event<_>()
 ```
 
-### Setup a Triggering Mechanism
+### Trigger the event, passing any arguments
 ```F#
-member this.FireAsync() = Async.AwaitEvent fireEvt.Publish
+if Input.GetButton("Fire1") then fireEvt.Trigger(Time.time)
 ```
 ]
 ---
@@ -301,11 +301,12 @@ member this.FireAsync() = Async.AwaitEvent fireEvt.Publish
 ## Example
 ]
 .right-column[
-### Trigger the event and pass arguments
+
+### Await the event inside an async workflow
 ```F#
-if Input.GetButton("Fire1") then fireEvt.Trigger(Time.time)
+let! time = Async.AwaitEvent fireEvt.Publish
 ```
-Aside: async workflows do not execute on the main thread.  Statically scoped values, such as Time.time, are only available on the main thread and must therefore be passed as arguments.
+Aside: async workflows do not execute on the main thread.  Statically scoped values, such as Time.time, are only available on the main thread and therefore can only be passed as arguments.
 ]
 
 ---
@@ -324,7 +325,7 @@ let fireWF = async {
     // set up an infinite loop with game state
     let rec fireloop(nextFire) = async {
         // WAIT for the fire button to be triggered
-        let! time = this.FireAsync()
+        let! time = Async.AwaitEvent fireEvt.Publish
 
         // handle the fire and get our nextfiretime
         let nextfiretime = fireCtrlr fireRate time nextFire
@@ -350,7 +351,7 @@ let fireCtrlr fireRate (time : float32) nextFire =
 Some Lessons Learned
 --------------------
 ## FSharp Limitations
- * No folders
+ * No folders (Update: install F\# Power Tools!)
  * Dependencies must be loaded in order
  * Use ALT+UP/DOWN to control the order of the files
 
@@ -365,8 +366,10 @@ Code Organization
  * 1 module per file
 
 ## proposed f# unity organization
- * top-layer file contains the game components, other layers support the game components
- * use modules to expand game functionality
+ * Game types
+ * Composable logic
+ * Game components
+
 
 ---
 
