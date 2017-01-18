@@ -36,6 +36,9 @@
         padding-top: 50px;
         padding-bottom: 50px;
       }
+      .small-text-slide {
+        font-size: 8pt;
+      }
     </style>
   </head>
   <body>
@@ -62,8 +65,58 @@ Developer Insights
 .center[![Mega Maid](mega_maid.gif)]
 
 ---
+class: small-text-slide
+# But really, what does it do? DO NOT READ THIS
+- Copy's and unzips logs (either from server or from workstations)
+- Parses PetwareClientError and PetwareClientPerformance logs
+- Categorizes events into one of the following
+  - Bummer Dude - all API exceptions (500 level errors)
+        - Unknown - causes restart
+        - Deadlock - causes restart
+  - Scary Memory - when client's JS memory hits limit. Causes restart
+  - Application Lock Not Found
+  - Request Is Invalid
+  - Getting Locks Failed
+  - JavaScript Error - general bucket for all JavaScript console errors
+  - Ready For Checkout - message from ready-for-checkout
+  - Resource Does Not Support (GET) - usually when the client attempts a GET from a badly formed URL
+  - Restart
+        - Manual
+        - Automatic
+  - Unhandled Rejection - general buck for all JavaScript errors occurring inside a promise
+  - SignalR Event - any messaging event
+  - Ignore - events we explicitly don't care about
+  - Uncategorized
+- Outputs
+  - Performance related
+        - Memory usage over time of each workstation
+        - Memory usage annotated by each StateTransition
+        - Time series of each hospital's workstations StateTransitions side-by-side (better visibility of interactions between 
+  - Trends
+        - Errors, Restarts, and Scary Memory events historically
+  - Timeline analysis
+        - Visualize daily hospital-level error events across workstations
+        - Visualize daily hospital-level activity levels across workstations
+        - Visualize daily hospital-level SignalR events across workstations
+  - Error summaries
+        - Counts by category, across the board
+        - Counts by category, each hospital
+        - Counts by hospital
+  - Full detail
+        - Single Csv, all events, summarized
+        - Multiple Csv, 1 per event category, detailed
+        - BulkCopy to SQL db, detailed
+
+
+---
 # How is it used?
 1. Nightly scheduled task @ 11:30PM PST
+```cmd
+REM download
+HospitalLogRetriever.exe c "D:\Temp\Petware\LogArchives\20170118" "2017-01-18"
+REM analyze
+HospitalLogRetriever.exe a "D:\Temp\Petware\LogArchives\20170118" "2017-01-18"
+```
 2. Interactive via Visual Studio -> Ad-Hoc exploration
 .center[![opamp](Practical-Uses-of-Instrumentation-Amplifiers.png)]
 ---
@@ -161,7 +214,8 @@ class: resource-slide
 # Resources
 - Outputs: \\\\dev10ods1\d$\Temp\Petware\LogAnalysis
 - TFS: $/AppDevResources/HospitalLogAnalysis
-- https://fsharpforfunandprofit.com/
+- Slides: http://ilmaestro.github.io/loghog
+- F#: https://fsharpforfunandprofit.com/
 
 ## Thank You
 
