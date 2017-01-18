@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Log Hog</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .title-slide h1 {
+        background:rgba(250,250,250,0.5);
+      }
+      .title-slide p {
+        color: #fff;
+      }
+      .resource-slide h1 {
+        color: #fff;
+      }
+      .resource-slide h2 {
+        text-shadow: 2px 2px black;
+        text-align: center;
+        color: white;
+        font-family:"Impact";
+        font-size: 50px;
+        line-height: 100px;
+      }
+      .resource-slide ul, .resource-slide ol {
+        background:rgba(250,250,250,0.7);
+        padding-top: 50px;
+        padding-bottom: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, top, title-slide
+background-image: url(Pig-Farm.jpg)
+# Log Hog
+Ryan Kilkenny
+
+Developer Insights
+
+1/19/2017
+---
+
+# What does it do?
+```f#
+[Petware Client Logs, Performance Logs]
+|> Download
+|> Parse
+|> Classify
+|> Report
+```
+.center[![Mega Maid](mega_maid.gif)]
+
+---
+# How is it used?
+1. Nightly scheduled task @ 11:30PM PST
+2. Interactive via Visual Studio -> Ad-Hoc exploration
+.center[![opamp](Practical-Uses-of-Instrumentation-Amplifiers.png)]
+---
+# Demo: outputs
+
+<a href="file:///\\dev10ods1\d$\Temp\Petware\LogAnalysis">\\\\dev10ods1\d$\Temp\Petware\LogAnalysis</a>
+
+---
+# F# Primer
+C#
+```c#
+public int Square(int num)
+{
+    return num * num;
+}
+```
+F#
+```f#
+let squares x = x * x
+```
+
+---
+# F# Primer
+
+C#
+```c#
+Console.WriteLine(String.Format("{0} world", "hello"));
+```
+F#
+```f#
+printfn "%s world" "hello"
+
+"hello" |> printfn "%s world"
+
+printfn "%s world" <| "hello"
+```
+
+---
+# F# Primer
+
+C#
+```c#
+public int SumOfSquares(IEnumerable<int> list)
+{
+    return list.Sum(x => x * x);
+}
+```
+F#
+```f#
+let sumOfSquares nums =
+    nums
+    |> Seq.sum (fun x -> x * x)
+```
+---
+# Demo: Downloading Logs
+.center[![Interactive](interactive_code.gif)]
+
+---
+# Just a Little More F#...
+
+```f#
+let ``A really long function name~`` () =
+    printfn "wow that actually worked?"
+
+``A really long function name~`` ()  //outputs: wow that actually worked?
+
+```
+
+```f#
+let inline (++) path1 path2 =
+    System.IO.Path.Combine(path1, path2)
+
+let myfolder = @"c:\myfolder" ++ "mypath" //same as Path.Combine, but inline.
+```
+
+---
+# Demo: Analysis
+.center[![analysis](analysis.gif)]
+
+
+---
+background-image: url(http://kingofwallpapers.com/calm/calm-041.jpg)
+class: resource-slide
+# TODO's
+
+1. Scale out to more hospitals
+2. Make outputs generally available
+3. Add deeper historical analysis of collected data
+4. Try to take over the world
+
+---
+background-image: url(https://sergeytihon.files.wordpress.com/2015/04/w2.jpg)
+class: resource-slide
+
+# Resources
+- Outputs: \\\\dev10ods1\d$\Temp\Petware\LogAnalysis
+- TFS: $/AppDevResources/HospitalLogAnalysis
+- https://fsharpforfunandprofit.com/
+
+## Thank You
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
