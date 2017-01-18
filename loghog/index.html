@@ -125,7 +125,7 @@ HospitalLogRetriever.exe a "D:\Temp\Petware\LogArchives\20170118" "2017-01-18"
 <a href="file:///\\dev10ods1\d$\Temp\Petware\LogAnalysis">\\\\dev10ods1\d$\Temp\Petware\LogAnalysis</a>
 
 ---
-# F# Primer
+# F# Primer - Basic Syntax
 C#
 ```c#
 public int Square(int num)
@@ -139,7 +139,7 @@ let squares x = x * x
 ```
 
 ---
-# F# Primer
+# F# Primer - Piping
 
 C#
 ```c#
@@ -155,28 +155,32 @@ printfn "%s world" <| "hello"
 ```
 
 ---
-# F# Primer
+# F# Primer - LINQ Comparison
 
 C#
 ```c#
-public int SumOfSquares(IEnumerable<int> list)
+public int SumOfSquares(IEnumerable<int> nums)
 {
-    return list.Sum(x => x * x);
+    return nums
+        .Select(x => x * x)
+        .Sum();
 }
 ```
 F#
 ```f#
-let sumOfSquares nums =
-    nums
-    |> Seq.sumBy (fun x -> x * x)
+let sumOfSquares nums = 
+    nums 
+    |> Seq.map (fun x -> x * x)
+    |> Seq.sum
 ```
 ---
 # Demo: Downloading Logs
 .center[![Interactive](interactive_code.gif)]
 
 ---
-# Just a Little More F#...
+# A Little More F#...
 
+Function Naming
 ```f#
 let ``A really long function name~`` () =
     printfn "wow that actually worked?"
@@ -184,7 +188,7 @@ let ``A really long function name~`` () =
 ``A really long function name~`` ()  //outputs: wow that actually worked?
 
 ```
-
+Inline Functions
 ```f#
 let inline (++) path1 path2 =
     System.IO.Path.Combine(path1, path2)
